@@ -82,17 +82,8 @@ function [queries, responses, expected_costs, true_costs, pdfs, ...
 
     fprintf('constructing query %i of %i ...\n', i, num_queries);
     
-    % find most informtative candidate
-    num_candidates = max(candidate_list(:)) - 1;
-    expected_expected_costs = zeros(num_candidates, 1);
-    for j = 1:num_candidates
-      expected_expected_costs(j) = calculate_expected_expected_cost(pdf, ...
-              candidate_list == j, beta, item_cost, largest_radius_fraction);
-    end
-
-    % construct query corresponding to most informative candidate
-    [~, ind] = min(expected_expected_costs);
-    query = (candidate_list == ind);
+    query = choose_best_query_from_candidates(pdf, candidate_list, ...
+            beta, item_cost, largest_radius_fraction);
     queries(:, :, i) = query;
 
     % simulate a response for the given query
